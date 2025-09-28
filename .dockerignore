@@ -1,0 +1,10 @@
+# See https://docs.docker.com/engine/reference/builder/#dockerignore-file
+
+# Dependencies
+node_modules
+
+# Build artifacts
+.next
+npm-debug.log
+build
+dist
