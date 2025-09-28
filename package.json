@@ -10,6 +10,7 @@
     "postinstall": "rimraf ./node_modules/pdf-parse/test"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
     "docx": "^9.5.1",
     "framer-motion": "^12.23.22",
     "jszip": "^3.10.1",
