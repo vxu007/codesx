@@ -26,7 +26,7 @@ const config: Config = {
         },
       },
       animation: {
-        "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
+        "border-beam": "border-beam var(--duration, 15s) infinite linear",
       },
     },
   },
