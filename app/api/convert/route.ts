@@ -41,6 +41,12 @@ export async function POST(req: NextRequest) {
           pdfParser.parseBuffer(buffer);
         });
 
+        if (!text || text.trim() === "") {
+          console.warn(`No text content found in file: ${file.name}`);
+          zip.file(`${file.name}.error.txt`, `No text content found in PDF`);
+          return;
+        }
+
         const paragraphs = text.split("\n").map((line) => {
           return new Paragraph({
             children: [new TextRun(line)],
