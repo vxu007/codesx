@@ -1,5 +1,5 @@
 # 1. Install dependencies
-FROM node:18-alpine AS deps
+FROM node:20-alpine AS deps
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -8,7 +8,7 @@ RUN npm install -g npm@latest
 RUN npm install --legacy-peer-deps
 
 # 2. Build the application
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -21,7 +21,7 @@ COPY . .
 RUN npm run build
 
 # 3. Production image
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
