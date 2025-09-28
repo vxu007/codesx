@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import pdfParse from "pdf-parse";
+import PDFParser from "pdf2json";
 import {
   Document,
   Packer,
@@ -25,9 +25,23 @@ export async function POST(req: NextRequest) {
     const conversionPromises = files.map(async (file) => {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        const data = await pdfParse(buffer);
+        const pdfParser = new PDFParser();
 
-        const paragraphs = data.text.split("\n").map((line) => {
+        const text = await new Promise<string>((resolve, reject) => {
+          pdfParser.on("pdfParser_dataError", (errData) => {
+            if ("parserError" in errData) {
+              reject(errData.parserError);
+            } else {
+              reject(errData);
+            }
+          });
+          pdfParser.on("pdfParser_dataReady", () => {
+            resolve((pdfParser as any).getRawTextContent());
+          });
+          pdfParser.parseBuffer(buffer);
+        });
+
+        const paragraphs = text.split("\n").map((line) => {
           return new Paragraph({
             children: [new TextRun(line)],
           });
