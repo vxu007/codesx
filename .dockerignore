@@ -8,3 +8,11 @@ node_modules
 npm-debug.log
 build
 dist
+
+# Test files
+/test
+/tests
+
+# Environment variables
+.env
+.env*.local

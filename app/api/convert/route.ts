@@ -8,6 +8,8 @@ import {
 } from "docx";
 import JSZip from "jszip";
 import { Readable } from "stream";
+import fs from "fs/promises";
+import path from "path";
 
 export async function POST(req: NextRequest) {
   try {
@@ -56,6 +58,20 @@ export async function POST(req: NextRequest) {
     await Promise.all(conversionPromises);
 
     const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+
+    // Save the zip file to the volume
+    const timestamp = new Date().toISOString().replace(/:/g, "-");
+    const zipFileName = `converted_files_${timestamp}.zip`;
+    const zipFilePath = path.join("/app/converted_files", zipFileName);
+
+    try {
+      await fs.mkdir("/app/converted_files", { recursive: true });
+      await fs.writeFile(zipFilePath, zipBuffer);
+      console.log(`Successfully saved zip file to ${zipFilePath}`);
+    } catch (error) {
+      console.error("Failed to save zip file:", error);
+      // Don't block the response if saving fails, just log the error
+    }
 
     const stream = new Readable();
     stream.push(zipBuffer);
